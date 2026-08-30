@@ -6,11 +6,18 @@
 
 <p align="center">
   <a href="https://pub.dev/packages/modalora"><img src="https://img.shields.io/pub/v/modalora.svg?color=6366F1&style=for-the-badge" alt="Pub Version" /></a>
+  <a href="https://imcoderaditya.github.io/Modalora/"><img src="https://img.shields.io/badge/Live%20Docs-Interactive%20Website-8B5CF6?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Live Docs Website" /></a>
   <a href="https://github.com/imCoderAditya/Modalora"><img src="https://img.shields.io/github/license/imCoderAditya/Modalora?color=06B6D4&style=for-the-badge" alt="License" /></a>
   <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.x-02569B?style=for-the-badge&logo=flutter" alt="Flutter" /></a>
   <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Platform-iOS%20%7C%20Android%20%7C%20Web%20%7C%20macOS%20%7C%20Windows%20%7C%20Linux-10B981?style=for-the-badge" alt="Platforms" /></a>
   <a href="https://github.com/imCoderAditya/Modalora"><img src="https://img.shields.io/badge/Tests-16%20Passing-success?style=for-the-badge" alt="Tests Passing" /></a>
 </p>
+
+---
+
+> 🌐 **Interactive Documentation Website & Live Simulator**:
+> Explore live component previews, interactive phone simulator, code generators, and full API documentation at:
+> 👉 **[imcoderaditya.github.io/Modalora](https://imcoderaditya.github.io/Modalora/)**
 
 ---
 
@@ -22,6 +29,7 @@
 
 ## 📑 Table of Contents
 
+- [🌐 Interactive Documentation Website](https://imcoderaditya.github.io/Modalora/)
 - [🌟 Why Modalora?](#-why-modalora)
 - [📦 Installation](#-installation)
 - [🚀 Quick Start & Contextless Setup](#-quick-start--contextless-setup)
