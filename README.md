@@ -17,7 +17,7 @@
 
 > 🌐 **Interactive Documentation Website & Live Simulator**:
 > Explore live component previews, interactive phone simulator, code generators, and full API documentation at:
-> 👉 **[Docs](https://imcoderaditya.github.io/Modalora/)**
+> 👉 **[Docs](https://imcoderaditya.github.io/Modalora/doc)**
 
 
 ---
