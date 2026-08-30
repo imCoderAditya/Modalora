@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Modalora — Technical Architecture & Complete Development Report</title>
@@ -9,6 +10,7 @@
     @page {
       size: A4;
       margin: 18mm 16mm;
+
       @bottom-right {
         content: counter(page);
       }
@@ -73,6 +75,7 @@
       font-weight: 800;
       line-height: 1.15;
       background: linear-gradient(135deg, #FFFFFF 0%, #A78BFA 60%, #38BDF8 100%);
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 12px;
@@ -178,7 +181,8 @@
       font-size: 8.5pt;
     }
 
-    th, td {
+    th,
+    td {
       border: 1px solid #CBD5E1;
       padding: 6px 8px;
       text-align: left;
@@ -203,9 +207,20 @@
       text-transform: uppercase;
     }
 
-    .tag-purple { background: #EDE9FE; color: #6D28D9; }
-    .tag-cyan { background: #CFFAFE; color: #0E7490; }
-    .tag-green { background: #DCFCE7; color: #15803D; }
+    .tag-purple {
+      background: #EDE9FE;
+      color: #6D28D9;
+    }
+
+    .tag-cyan {
+      background: #CFFAFE;
+      color: #0E7490;
+    }
+
+    .tag-green {
+      background: #DCFCE7;
+      color: #15803D;
+    }
 
     /* Code Snippet */
     pre {
@@ -220,10 +235,22 @@
       overflow-x: hidden;
     }
 
-    .keyword { color: #F43F5E; }
-    .type { color: #38BDF8; }
-    .string { color: #34D399; }
-    .comment { color: #64748B; font-style: italic; }
+    .keyword {
+      color: #F43F5E;
+    }
+
+    .type {
+      color: #38BDF8;
+    }
+
+    .string {
+      color: #34D399;
+    }
+
+    .comment {
+      color: #64748B;
+      font-style: italic;
+    }
 
     .highlight-box {
       background: #EEF2FF;
@@ -236,6 +263,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- COVER PAGE -->
@@ -262,16 +290,23 @@
   <section>
     <h1>1. Executive Summary & Architecture</h1>
     <p>
-      <strong>Modalora</strong> was architected to solve the fragmentation, rigidity, and boilerplate of traditional Flutter overlay widgets (<code>showDialog</code>, <code>showModalBottomSheet</code>, <code>ScaffoldMessenger</code>, tooltips, and custom overlays). Modalora unifies every overlay paradigm into a single, cohesive, developer-first design system with zero external package dependencies.
+      <strong>Modalora</strong> was architected to solve the fragmentation, rigidity, and boilerplate of traditional
+      Flutter overlay widgets (<code>showDialog</code>, <code>showModalBottomSheet</code>,
+      <code>ScaffoldMessenger</code>, tooltips, and custom overlays). Modalora unifies every overlay paradigm into a
+      single, cohesive, developer-first design system with zero external package dependencies.
     </p>
 
     <div class="highlight-box">
       <strong>Core Architectural Pillars:</strong>
       <ul style="margin-left: 18px; margin-top: 4px;">
         <li><strong>Unified Facade Engine:</strong> Complete control via <code>Modalora.*</code> top-level methods.</li>
-        <li><strong>Contextless Overlay Dispatch:</strong> Global <code>ModaloraConfig.navigatorKey</code> allows triggering modals from BLoC, Riverpod, or background jobs.</li>
-        <li><strong>4-Tier Property Priority Cascade:</strong> <code>Inline Override</code> → <code>Component Theme</code> → <code>Global Theme</code> → <code>System Default</code>.</li>
-        <li><strong>Hardware-Accelerated Frosted Glass:</strong> Native backdrop blur and crystalline specular highlights.</li>
+        <li><strong>Contextless Overlay Dispatch:</strong> Global <code>ModaloraConfig.navigatorKey</code> allows
+          triggering modals from BLoC, Riverpod, or background jobs.</li>
+        <li><strong>4-Tier Property Priority Cascade:</strong> <code>Inline Override</code> →
+          <code>Component Theme</code> → <code>Global Theme</code> → <code>System Default</code>.
+        </li>
+        <li><strong>Hardware-Accelerated Frosted Glass:</strong> Native backdrop blur and crystalline specular
+          highlights.</li>
       </ul>
     </div>
 
@@ -280,25 +315,29 @@
       <div class="card">
         <div class="card-title">📦 Core Engine Layer</div>
         <div class="card-desc">
-          <code>ModaloraConfig</code> global state, <code>ModaloraOverlayController</code>, <code>ModaloraSnackbarQueue</code>, and screen size responsive breakpoint calculators.
+          <code>ModaloraConfig</code> global state, <code>ModaloraOverlayController</code>,
+          <code>ModaloraSnackbarQueue</code>, and screen size responsive breakpoint calculators.
         </div>
       </div>
       <div class="card">
         <div class="card-title">🎨 Design Token System</div>
         <div class="card-desc">
-          <code>ModaloraThemeData</code>, <code>ModaloraDialogTheme</code>, <code>ModaloraBottomSheetTheme</code>, <code>ModaloraMenuTheme</code>, and dark/light adaptive presets.
+          <code>ModaloraThemeData</code>, <code>ModaloraDialogTheme</code>, <code>ModaloraBottomSheetTheme</code>,
+          <code>ModaloraMenuTheme</code>, and dark/light adaptive presets.
         </div>
       </div>
       <div class="card">
         <div class="card-title">⚡ Animation Physics</div>
         <div class="card-desc">
-          <code>ModaloraAnimation</code> builder supporting spring physics, customizable dampening, scale/fade combinations, and custom transitions.
+          <code>ModaloraAnimation</code> builder supporting spring physics, customizable dampening, scale/fade
+          combinations, and custom transitions.
         </div>
       </div>
       <div class="card">
         <div class="card-title">🌌 Spatial 3D Engine</div>
         <div class="card-desc">
-          <code>Matrix4</code> perspective distortion with real-time pointer/gyro tilt, specular radial light sheen, and pulsing orbital glowing rings.
+          <code>Matrix4</code> perspective distortion with real-time pointer/gyro tilt, specular radial light sheen, and
+          pulsing orbital glowing rings.
         </div>
       </div>
     </div>
@@ -308,7 +347,8 @@
   <div class="page-break"></div>
   <section>
     <h1>2. Complete Developed Component Suite</h1>
-    <p>The following 10 comprehensive overlay systems were developed, rigorously tested, and integrated into Modalora v1.0.1:</p>
+    <p>The following 10 comprehensive overlay systems were developed, rigorously tested, and integrated into Modalora
+      v1.0.1:</p>
 
     <table>
       <thead>
@@ -329,7 +369,8 @@
         <tr>
           <td><strong>2. Bottom Sheet</strong></td>
           <td><code>Modalora.bottomSheet()</code></td>
-          <td><code>alignment: Alignment.bottomCenter</code>, drag pill handle, multi-stage <code>snapPoints</code>, safe insets.</td>
+          <td><code>alignment: Alignment.bottomCenter</code>, drag pill handle, multi-stage <code>snapPoints</code>,
+            safe insets.</td>
           <td><span class="tag tag-purple">20.0 px blur</span></td>
         </tr>
         <tr>
@@ -392,7 +433,8 @@
   ..<span class="method">rotateX</span>(_tiltX)             <span class="comment">// Angular tilt on Y-axis pointer movement</span>
   ..<span class="method">rotateY</span>(_tiltY);            <span class="comment">// Angular tilt on X-axis pointer movement</span></code></pre>
     <p>
-      Accompanied by an overlaid <code>RadialGradient</code> with dynamic focal position that computes real-time specular light reflections across the glass surface.
+      Accompanied by an overlaid <code>RadialGradient</code> with dynamic focal position that computes real-time
+      specular light reflections across the glass surface.
     </p>
   </section>
 
@@ -470,13 +512,15 @@
       <div class="card">
         <div class="card-title">🧪 Unit & Widget Test Suites</div>
         <div class="card-desc">
-          <strong>16 tests passed (100% pass rate)</strong> across dialogs, bottom sheets, top sheets, menus, popups, toast queue, themes, and 3D matrix tilt cards.
+          <strong>16 tests passed (100% pass rate)</strong> across dialogs, bottom sheets, top sheets, menus, popups,
+          toast queue, themes, and 3D matrix tilt cards.
         </div>
       </div>
       <div class="card">
         <div class="card-title">🔍 Flutter Static Analyzer</div>
         <div class="card-desc">
-          <strong>0 errors, 0 warnings, 0 lints found.</strong> Full compliance with strict Dart 3.x and Flutter 3.10+ typing guidelines.
+          <strong>0 errors, 0 warnings, 0 lints found.</strong> Full compliance with strict Dart 3.x and Flutter 3.10+
+          typing guidelines.
         </div>
       </div>
       <div class="card">
@@ -488,7 +532,8 @@
       <div class="card">
         <div class="card-title">📦 Pub.dev Distribution</div>
         <div class="card-desc">
-          Validated with <code>flutter pub publish --dry-run</code> with 0 warnings and successfully published on pub.dev.
+          Validated with <code>flutter pub publish --dry-run</code> with 0 warnings and successfully published on
+          pub.dev.
         </div>
       </div>
     </div>
@@ -526,10 +571,12 @@
       </tbody>
     </table>
 
-    <div style="margin-top: 30px; text-align: center; font-size: 8.5pt; color: #94A3B8; border-top: 1px solid #E2E8F0; padding-top: 12px;">
+    <div
+      style="margin-top: 30px; text-align: center; font-size: 8.5pt; color: #94A3B8; border-top: 1px solid #E2E8F0; padding-top: 12px;">
       Modalora v1.0.1 • Released under MIT License • Copyright © 2026 imCoderAditya (Modalora Authors)
     </div>
   </section>
 
 </body>
+
 </html>
