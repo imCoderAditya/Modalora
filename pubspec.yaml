@@ -1,0 +1,21 @@
+name: modalora
+description: "A premium, production-ready Flutter Overlay Experience System with complete developer-controlled customization. Beautiful by default. Completely customizable by choice."
+version: 1.0.0
+homepage: https://github.com/imCoderAditya/Modalora
+repository: https://github.com/imCoderAditya/Modalora
+issue_tracker: https://github.com/imCoderAditya/Modalora/issues
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:

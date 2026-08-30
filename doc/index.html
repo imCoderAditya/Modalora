@@ -1,0 +1,2398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modalora — The Complete Flutter Modal, Dialog, Sheet & Overlay Experience System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0A0E1A;
+      --bg-secondary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.75);
+      --bg-card-hover: rgba(30, 41, 59, 0.85);
+      --bg-glass: rgba(10, 14, 26, 0.88);
+      --accent-purple: #8B5CF6;
+      --accent-glow: #A78BFA;
+      --accent-cyan: #06B6D4;
+      --accent-emerald: #10B981;
+      --accent-rose: #F43F5E;
+      --accent-amber: #F59E0B;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border: rgba(255, 255, 255, 0.12);
+      --border-accent: rgba(139, 92, 246, 0.4);
+      --search-bg: rgba(17, 24, 39, 0.8);
+      --th-bg: rgba(15, 23, 42, 0.95);
+      --code-bg: #070B14;
+      --code-text-bg: rgba(139, 92, 246, 0.15);
+      --code-text-color: #C4B5FD;
+      --footer-bg: rgba(10, 14, 26, 0.95);
+      --phone-bg: #090D16;
+      --phone-border: #1E293B;
+      --sidebar-width: 280px;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #F8FAFC;
+      --bg-secondary: #F1F5F9;
+      --bg-card: #FFFFFF;
+      --bg-card-hover: #F8FAFC;
+      --bg-glass: rgba(248, 250, 252, 0.92);
+      --accent-purple: #7C3AED;
+      --accent-glow: #8B5CF6;
+      --accent-cyan: #0891B2;
+      --accent-emerald: #059669;
+      --accent-rose: #E11D48;
+      --accent-amber: #D97706;
+      --text-main: #0F172A;
+      --text-muted: #475569;
+      --border: rgba(0, 0, 0, 0.1);
+      --border-accent: rgba(124, 58, 237, 0.35);
+      --search-bg: #FFFFFF;
+      --th-bg: #F1F5F9;
+      --code-bg: #1E293B;
+      --code-text-bg: rgba(124, 58, 237, 0.1);
+      --code-text-color: #5B21B6;
+      --footer-bg: #F1F5F9;
+      --phone-bg: #F8FAFC;
+      --phone-border: #CBD5E1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 90px;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Layout */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .doc-layout {
+      display: flex;
+      gap: 48px;
+      margin-top: 32px;
+      position: relative;
+    }
+
+    /* Ambient Background Glow */
+    .glow-bg {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .glow-1 {
+      position: absolute;
+      top: -15%;
+      left: 15%;
+      width: 650px;
+      height: 650px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.16) 0%, transparent 70%);
+      filter: blur(90px);
+    }
+
+    .glow-2 {
+      position: absolute;
+      top: 35%;
+      right: 10%;
+      width: 550px;
+      height: 550px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.14) 0%, transparent 70%);
+      filter: blur(90px);
+    }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: var(--bg-glass);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 14px 0;
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-main);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-badge {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-main);
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-purple);
+      transform: scale(1.05);
+    }
+
+    /* Sidebar Navigation with Auto ScrollSpy */
+    .sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: sticky;
+      top: 90px;
+      height: calc(100vh - 110px);
+      overflow-y: auto;
+      padding-right: 16px;
+      scroll-behavior: smooth;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    .sidebar-section {
+      margin-bottom: 24px;
+    }
+
+    .sidebar-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      padding-left: 12px;
+    }
+
+    .sidebar-list {
+      list-style: none;
+    }
+
+    .sidebar-item a {
+      display: block;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-item a:hover {
+      color: var(--text-main);
+      background: rgba(139, 92, 246, 0.08);
+    }
+
+    .sidebar-item a.active {
+      color: var(--accent-glow) !important;
+      background: rgba(139, 92, 246, 0.16) !important;
+      font-weight: 700 !important;
+      border-left: 3px solid var(--accent-purple) !important;
+    }
+
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      padding-bottom: 80px;
+    }
+
+    /* Hero Banner */
+    .hero {
+      padding: 40px 0 60px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+    }
+
+    .badge-capsule {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid var(--border-accent);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent-glow);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.15;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, var(--text-main) 30%, var(--accent-glow) 70%, var(--accent-cyan) 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin: 0 auto 32px;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-purple), #6D28D9);
+      color: #FFFFFF;
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(139, 92, 246, 0.5);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-purple);
+      transform: translateY(-2px);
+    }
+
+    /* Section Styles */
+    .doc-section {
+      margin-bottom: 64px;
+      scroll-margin-top: 95px;
+    }
+
+    .doc-section h2 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .doc-section h3 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 32px 0 14px;
+      color: var(--text-main);
+    }
+
+    .doc-section p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 18px;
+    }
+
+    /* Interactive Section Slider Carousel */
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .slider-nav-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .slider-arrow-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+    }
+
+    .slider-arrow-btn:hover {
+      background: var(--accent-purple);
+      color: #fff;
+    }
+
+    .section-slider-track {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding: 8px 4px 16px;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+    }
+
+    .section-slider-track::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .section-slider-track::-webkit-scrollbar-thumb {
+      background: var(--border-accent);
+      border-radius: 6px;
+    }
+
+    .slider-card {
+      flex: 0 0 280px;
+      scroll-snap-align: start;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      text-decoration: none;
+      color: var(--text-main);
+      transition: all 0.25s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .slider-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-purple);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(139, 92, 246, 0.2);
+    }
+
+    .slider-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .slider-card h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .slider-card p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .slider-card span.action-link {
+      font-size: 0.82rem;
+      color: var(--accent-glow);
+      font-weight: 700;
+    }
+
+    /* Code Blocks with VS Code / IntelliJ Syntax Highlighting */
+    .code-wrapper {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 20px 0;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .code-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .code-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot-red {
+      background: #EF4444;
+    }
+
+    .dot-yellow {
+      background: #F59E0B;
+    }
+
+    .dot-green {
+      background: #10B981;
+    }
+
+    .code-lang-tag {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--accent-glow);
+      margin-left: 10px;
+    }
+
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-purple);
+      color: #fff;
+    }
+
+    pre {
+      padding: 20px;
+      overflow-x: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: #E2E8F0;
+      background: var(--code-bg);
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* Category Badges for API Tables */
+    .badge-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      white-space: nowrap;
+    }
+
+    .tag-common {
+      background: rgba(139, 92, 246, 0.2);
+      color: #C4B5FD;
+      border: 1px solid rgba(139, 92, 246, 0.4);
+    }
+
+    .tag-sheet {
+      background: rgba(6, 182, 212, 0.2);
+      color: #67E8F9;
+      border: 1px solid rgba(6, 182, 212, 0.4);
+    }
+
+    .tag-dialog {
+      background: rgba(244, 63, 94, 0.2);
+      color: #FDA4AF;
+      border: 1px solid rgba(244, 63, 94, 0.4);
+    }
+
+    .tag-action {
+      background: rgba(245, 158, 11, 0.2);
+      color: #FCD34D;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .tag-popup {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6EE7B7;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .tag-menu {
+      background: rgba(59, 130, 246, 0.2);
+      color: #93C5FD;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+
+    .tag-snack {
+      background: rgba(236, 72, 153, 0.2);
+      color: #F9A8D4;
+      border: 1px solid rgba(236, 72, 153, 0.4);
+    }
+
+    .tag-overlay {
+      background: rgba(168, 85, 247, 0.2);
+      color: #D8B4FE;
+      border: 1px solid rgba(168, 85, 247, 0.4);
+    }
+
+    /* IDE Syntax Token Colors */
+    .keyword {
+      color: #F472B6;
+      font-weight: 600;
+    }
+
+    .type,
+    .class-name {
+      color: #38BDF8;
+      font-weight: 600;
+    }
+
+    .string {
+      color: #34D399;
+    }
+
+    .function,
+    .method {
+      color: #FBBF24;
+    }
+
+    .property,
+    .attr {
+      color: #FB923C;
+    }
+
+    .comment {
+      color: #64748B;
+      font-style: italic;
+    }
+
+    .number {
+      color: #A78BFA;
+    }
+
+    .annotation {
+      color: #F59E0B;
+    }
+
+    p code,
+    li code,
+    td code {
+      background: var(--code-text-bg);
+      color: var(--code-text-color);
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 0.84rem;
+    }
+
+    /* Live Interactive Simulator */
+    .sim-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 36px;
+      align-items: center;
+      margin: 28px 0;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .sim-controls-panel h4 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .sim-controls-panel p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin-bottom: 20px;
+    }
+
+    .sim-btn-matrix {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .sim-trigger {
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid var(--border-accent);
+      color: var(--text-main);
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      user-select: none;
+    }
+
+    .sim-trigger span {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .sim-trigger:hover {
+      background: var(--accent-purple);
+      color: #FFFFFF;
+      transform: translateY(-2px);
+    }
+
+    .sim-trigger:hover span {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* Phone Mockup */
+    .phone-mockup {
+      width: 100%;
+      height: 520px;
+      background: var(--phone-bg);
+      border: 9px solid var(--phone-border);
+      border-radius: 40px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .phone-notch {
+      width: 110px;
+      height: 18px;
+      background: var(--phone-border);
+      margin: 0 auto;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      z-index: 10;
+    }
+
+    .phone-body {
+      flex: 1;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .phone-ambient {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Modal Backdrop Inside Phone */
+    .sim-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 20;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .sim-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .sim-card {
+      background: rgba(26, 32, 53, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      max-width: 270px;
+      text-align: center;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+      transform: scale(0.9);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .sim-overlay.active .sim-card {
+      transform: scale(1);
+    }
+
+    .sim-overlay.sheet-bottom {
+      align-items: flex-end;
+      padding: 0;
+    }
+
+    .sim-overlay.sheet-bottom .sim-card {
+      max-width: 100%;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      transform: translateY(100%);
+      padding: 20px 20px 28px;
+    }
+
+    .sim-overlay.sheet-bottom.active .sim-card {
+      transform: translateY(0);
+    }
+
+    .sim-overlay.sheet-top {
+      align-items: flex-start;
+      padding: 0;
+    }
+
+    .sim-overlay.sheet-top .sim-card {
+      max-width: 100%;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      transform: translateY(-100%);
+      padding: 28px 20px 20px;
+    }
+
+    .sim-overlay.sheet-top.active .sim-card {
+      transform: translateY(0);
+    }
+
+    .sim-toast {
+      position: absolute;
+      bottom: 20px;
+      left: 14px;
+      right: 14px;
+      background: rgba(30, 41, 59, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      z-index: 30;
+      transform: translateY(30px);
+      opacity: 0;
+      transition: all 0.25s ease;
+    }
+
+    .sim-toast.active {
+      display: flex;
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Tables */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow-x: auto;
+      margin: 24px 0;
+    }
+
+    .search-filter {
+      width: 100%;
+      padding: 12px 18px;
+      background: var(--search-bg);
+      border: none;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th,
+    td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: var(--th-bg);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--footer-bg);
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      margin-top: 80px;
+      text-align: center;
+    }
+
+    footer p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1024px) {
+      .doc-layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .sim-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Ambient Glow Elements -->
+  <div class="glow-bg">
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+  </div>
+
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="logo">
+        <span>✨ Modalora</span>
+        <span class="logo-badge">v1.0.0</span>
+      </a>
+      <div class="nav-links">
+        <a href="#quickstart">Quick Start</a>
+        <a href="#simulator">Simulator</a>
+        <a href="#dialogs">Dialogs</a>
+        <a href="#sheets">Sheets</a>
+        <a href="#popups">Popups</a>
+        <a href="#menus">Menus</a>
+        <a href="#snackbars">Snackbars</a>
+        <a href="#overlays">Overlays</a>
+        <a href="#api">API</a>
+        <a href="https://github.com/imCoderAditya/Modalora" target="_blank" rel="noopener" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.8rem; text-decoration: none; border-radius: 8px;">⭐ GitHub</a>
+        <button class="theme-toggle-btn" id="themeToggle" title="Toggle Light/Dark Theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="doc-layout">
+
+      <!-- Sidebar Navigation with Active Scroll Tracking -->
+      <aside class="sidebar" id="sidebarNav">
+        <div class="sidebar-section">
+          <div class="sidebar-title">Getting Started</div>
+          <ul class="sidebar-list">
+            <li class="sidebar-item"><a href="#quickstart" class="nav-item">1. Installation & Setup</a></li>
+            <li class="sidebar-item"><a href="#contextless" class="nav-item">2. Contextless Mode</a></li>
+            <li class="sidebar-item"><a href="#theming" class="nav-item">3. Ambient Theming</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Interactive Engine</div>
+          <ul class="sidebar-list">
+            <li class="sidebar-item"><a href="#showcase-slider" class="nav-item">Component Slider</a></li>
+            <li class="sidebar-item"><a href="#simulator" class="nav-item">Live Simulator</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Components Step-by-Step</div>
+          <ul class="sidebar-list">
+            <li class="sidebar-item"><a href="#dialogs" class="nav-item">Dialogs & Confirmations</a></li>
+            <li class="sidebar-item"><a href="#sheets" class="nav-item">Bottom & Top Sheets</a></li>
+            <li class="sidebar-item"><a href="#actionsheets" class="nav-item">Action Sheets</a></li>
+            <li class="sidebar-item"><a href="#popups" class="nav-item">Anchor Popups & Tooltips</a></li>
+            <li class="sidebar-item"><a href="#menus" class="nav-item">Context Menus & Submenus</a></li>
+            <li class="sidebar-item"><a href="#snackbars" class="nav-item">Toasts & Snackbar Queues</a></li>
+            <li class="sidebar-item"><a href="#overlays" class="nav-item">Orbital Loading & Blockers</a></li>
+            <li class="sidebar-item"><a href="#3d-hologram" class="nav-item">3D Hologram & Tilt Engine</a></li>
+            <li class="sidebar-item"><a href="#adaptive" class="nav-item">Adaptive Mobile / Desktop</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">API & Architecture</div>
+          <ul class="sidebar-list">
+            <li class="sidebar-item"><a href="#animation" class="nav-item">Spring Physics & Curves</a></li>
+            <li class="sidebar-item"><a href="#api" class="nav-item">Complete API Reference</a></li>
+            <li class="sidebar-item"><a href="#sample-main" class="nav-item">13. Full main.dart Example</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- Hero Section -->
+        <section class="hero">
+          <div class="badge-capsule">
+            <span>⚡ Pure Flutter • Zero Dependencies • 60/120fps Glassmorphism</span>
+          </div>
+          <h1>The Complete Overlay Experience System for Flutter</h1>
+          <p>
+            Build stunning, production-ready dialogs, edge-to-edge sheets with custom alignments, collision-aware
+            popups, orbital loaders, and toast queues with unified, elegant APIs.
+          </p>
+          <div class="hero-actions">
+            <a href="#quickstart" class="btn btn-primary">Get Started in 60 Seconds</a>
+            <a href="#simulator" class="btn btn-secondary">Try Live Simulator 🎮</a>
+          </div>
+
+          <div style="margin-top: 36px; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+            <img src="modalora_preview_banner.jpg" alt="Modalora UI Preview Banner" style="width: 100%; height: auto; display: block;" />
+          </div>
+        </section>
+
+        <!-- Section-wise Horizontal Slider Carousel -->
+        <section class="doc-section" id="showcase-slider">
+          <div class="slider-header">
+            <h2>🚀 Component Showcase Slider</h2>
+            <div class="slider-nav-btns">
+              <button class="slider-arrow-btn" onclick="scrollSlider(-300)" title="Scroll Left">◀</button>
+              <button class="slider-arrow-btn" onclick="scrollSlider(300)" title="Scroll Right">▶</button>
+            </div>
+          </div>
+          <p>Explore all Modalora overlay systems. Click any card to navigate directly to its step-by-step guide:</p>
+
+          <div class="section-slider-track" id="sliderTrack">
+            <a href="#dialogs" class="slider-card">
+              <div class="slider-icon">💬</div>
+              <h4>Dialogs</h4>
+              <p>Glassmorphic modal dialogs with primary, secondary, and destructive actions.</p>
+              <span class="action-link">View Dialog Guide →</span>
+            </a>
+            <a href="#sheets" class="slider-card">
+              <div class="slider-icon">📐</div>
+              <h4>Bottom & Top Sheets</h4>
+              <p>Custom alignment (bottomCenter, topCenter), snap points, and safe-area cushions.</p>
+              <span class="action-link">View Sheets Guide →</span>
+            </a>
+            <a href="#actionsheets" class="slider-card">
+              <div class="slider-icon">📋</div>
+              <h4>Action Sheets</h4>
+              <p>iOS-inspired action sheets with icon badges and dismiss capsules.</p>
+              <span class="action-link">View ActionSheet Guide →</span>
+            </a>
+            <a href="#popups" class="slider-card">
+              <div class="slider-icon">🎯</div>
+              <h4>Popups & Tooltips</h4>
+              <p>Anchor-targeted popups with screen collision detection and auto-flip.</p>
+              <span class="action-link">View Popup Guide →</span>
+            </a>
+            <a href="#menus" class="slider-card">
+              <div class="slider-icon">⚡</div>
+              <h4>Context Menus</h4>
+              <p>Right-click and long-press menus with keyboard shortcuts and submenus.</p>
+              <span class="action-link">View Menu Guide →</span>
+            </a>
+            <a href="#snackbars" class="slider-card">
+              <div class="slider-icon">🍞</div>
+              <h4>Toast Snackbars</h4>
+              <p>Multi-position queued toast capsules with animated countdown progress bars.</p>
+              <span class="action-link">View Toast Guide →</span>
+            </a>
+            <a href="#overlays" class="slider-card">
+              <div class="slider-icon">🌀</div>
+              <h4>Orbital Loaders</h4>
+              <p>Continuous orbital sweep spinner with pulsing glow and dismiss handles.</p>
+              <span class="action-link">View Loader Guide →</span>
+            </a>
+            <a href="#adaptive" class="slider-card">
+              <div class="slider-icon">📱</div>
+              <h4>Adaptive Modals</h4>
+              <p>Automatic bottom sheets on mobile converting to centered dialogs on desktop/web.</p>
+              <span class="action-link">View Adaptive Guide →</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- 1. Quick Start Section -->
+        <section class="doc-section" id="quickstart">
+          <h2>📦 1. Installation & Setup</h2>
+          <p>Add <code>modalora</code> to your <code>pubspec.yaml</code> dependencies or run flutter pub add:</p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">terminal</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            </div>
+            <pre><code><span class="function">flutter</span> <span class="property">pub</span> <span class="method">add</span> <span class="string">modalora</span></code></pre>
+          </div>
+
+          <h3>Basic Initialization</h3>
+          <p>Import Modalora and use it directly with standard <code>MaterialApp</code>:</p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">dart</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            </div>
+            <pre><code><span class="keyword">import</span> <span class="string">'package:flutter/material.dart'</span>;
+<span class="keyword">import</span> <span class="string">'package:modalora/modalora.dart'</span>;
+
+<span class="keyword">void</span> <span class="function">main</span>() {
+  <span class="function">runApp</span>(<span class="keyword">const</span> <span class="type">MyApp</span>());
+}
+
+<span class="keyword">class</span> <span class="type">MyApp</span> <span class="keyword">extends</span> <span class="type">StatelessWidget</span> {
+  <span class="keyword">const</span> <span class="type">MyApp</span>({<span class="keyword">super</span>.<span class="property">key</span>});
+
+  <span class="annotation">@override</span>
+  <span class="type">Widget</span> <span class="function">build</span>(<span class="type">BuildContext</span> <span class="property">context</span>) {
+    <span class="keyword">return</span> <span class="type">MaterialApp</span>(
+      <span class="property">title</span>: <span class="string">'Modalora App'</span>,
+      <span class="property">theme</span>: <span class="type">ThemeData</span>.<span class="method">dark</span>(),
+      <span class="property">home</span>: <span class="keyword">const</span> <span class="type">HomeScreen</span>(),
+    );
+  }
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- 2. Contextless Setup -->
+        <section class="doc-section" id="contextless">
+          <h2>🚀 2. Contextless Invocations (Optional Context)</h2>
+          <p>
+            You can call any Modalora modal (dialog, bottomSheet, snackbar, loading overlay) from anywhere in your
+            codebase—including
+            BLoCs, Riverpod providers, services, or controllers—without passing <code>BuildContext</code>!
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">dart</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            </div>
+            <pre><code><span class="comment">// 1. Define global navigatorKey in your main.dart</span>
+<span class="keyword">final</span> <span class="type">GlobalKey</span>&lt;<span class="type">NavigatorState</span>&gt; <span class="property">navigatorKey</span> = <span class="type">GlobalKey</span>&lt;<span class="type">NavigatorState</span>&gt;();
+
+<span class="keyword">void</span> <span class="function">main</span>() {
+  <span class="comment">// 2. Configure Modalora once at app startup</span>
+  <span class="type">Modalora</span>.<span class="function">configure</span>(<span class="property">navigatorKey</span>: <span class="property">navigatorKey</span>);
+
+  <span class="function">runApp</span>(<span class="type">MaterialApp</span>(
+    <span class="property">navigatorKey</span>: <span class="property">navigatorKey</span>,
+    <span class="property">home</span>: <span class="keyword">const</span> <span class="type">HomeScreen</span>(),
+  ));
+}
+
+<span class="comment">// 3. Trigger anywhere without passing context!</span>
+<span class="keyword">void</span> <span class="function">showWelcomeToast</span>() {
+  <span class="type">Modalora</span>.<span class="function">snackbar</span>(
+    <span class="property">title</span>: <span class="string">'Welcome Back!'</span>,
+    <span class="property">message</span>: <span class="string">'Triggered cleanly from service layer without BuildContext.'</span>,
+  );
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- Live Simulator Section -->
+        <section class="doc-section" id="simulator">
+          <h2>🎮 Interactive Live Simulator</h2>
+          <p>Test how Modalora renders glassmorphic overlays, alignments, and orbital indicators in real-time:</p>
+
+          <div class="sim-container">
+            <div class="sim-controls-panel">
+              <h4>Select Overlay Component:</h4>
+              <p>Click any trigger button below to see the interactive phone screen respond immediately.</p>
+
+              <div class="sim-btn-matrix">
+                <button class="sim-trigger" onclick="simTrigger('dialog')">
+                  <strong>Glass Dialog</strong>
+                  <span>Title & Actions</span>
+                </button>
+                <button class="sim-trigger" onclick="simTrigger('sheet-bottom')">
+                  <strong>Bottom Sheet</strong>
+                  <span>Alignment.bottomCenter</span>
+                </button>
+                <button class="sim-trigger" onclick="simTrigger('sheet-top')">
+                  <strong>Top Sheet</strong>
+                  <span>Alignment.topCenter</span>
+                </button>
+                <button class="sim-trigger" onclick="simTrigger('action-sheet')">
+                  <strong>Action Sheet</strong>
+                  <span>List Items</span>
+                </button>
+                <button class="sim-trigger" onclick="simTrigger('loader')">
+                  <strong>Orbital Spinner</strong>
+                  <span>Continuous Glow</span>
+                </button>
+                <button class="sim-trigger" onclick="simTrigger('toast')">
+                  <strong>Snackbar Toast</strong>
+                  <span>Capsule Progress</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Phone Frame Mockup -->
+            <div class="phone-mockup">
+              <div class="phone-notch"></div>
+              <div class="phone-body">
+                <div class="phone-ambient"></div>
+                <div style="font-size: 2.2rem; margin-bottom: 8px;">✨</div>
+                <h4 style="font-weight: 700; margin-bottom: 4px;">Modalora OS</h4>
+                <p style="font-size: 0.78rem; color: var(--text-muted); max-width: 180px;">
+                  Tap left controls to simulate live transitions.
+                </p>
+
+                <!-- Simulated Overlay Layer -->
+                <div class="sim-overlay" id="simOverlay">
+                  <div class="sim-card" id="simCard">
+                    <div id="simIcon" style="font-size: 2rem; margin-bottom: 8px;">💎</div>
+                    <h4 id="simTitle" style="font-size: 1.05rem; font-weight: 700; margin-bottom: 4px;">Modalora Dialog
+                    </h4>
+                    <p id="simMsg" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">
+                      Frosted backdrop blur with custom actions.
+                    </p>
+                    <div id="simActions">
+                      <button class="btn btn-primary" style="width: 100%; padding: 8px; font-size: 0.8rem;"
+                        onclick="closeSim()">Dismiss</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Simulated Toast Layer -->
+                <div class="sim-toast" id="simToast">
+                  <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem;">
+                    <span>✅</span>
+                    <span id="simToastText">Operation successful</span>
+                  </div>
+                  <span style="font-size: 0.72rem; color: var(--accent-glow); font-weight: 700; cursor: pointer;"
+                    onclick="closeToast()">CLOSE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. Dialogs Section -->
+        <section class="doc-section" id="dialogs">
+          <h2>💬 3. Dialogs & Confirmations</h2>
+          <p>
+            Create ultra-clean modal dialogs with customizable titles, messages, custom widget children, primary,
+            secondary, and destructive action buttons, as well as optional auto-close timers.
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">dart</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            </div>
+            <pre><code><span class="comment">// Display a confirmation dialog with primary & destructive actions</span>
+<span class="keyword">final</span> <span class="property">confirmed</span> = <span class="keyword">await</span> <span class="type">Modalora</span>.<span class="function">dialog</span>&lt;<span class="type">bool</span>&gt;(
+  <span class="property">title</span>: <span class="string">'Delete Repository'</span>,
+  <span class="property">message</span>: <span class="string">'This will permanently remove the project and all history.'</span>,
+  <span class="property">primaryActionText</span>: <span class="string">'Keep Project'</span>,
+  <span class="property">onPrimaryAction</span>: () =&gt; <span class="type">Navigator</span>.<span class="method">pop</span>(<span class="property">context</span>, <span class="keyword">false</span>),
+  <span class="property">destructiveActionText</span>: <span class="string">'Delete Forever'</span>,
+  <span class="property">onDestructiveAction</span>: () =&gt; <span class="type">Navigator</span>.<span class="method">pop</span>(<span class="property">context</span>, <span class="keyword">true</span>),
+  <span class="property">barrierBlur</span>: <span class="number">10.0</span>,
+  <span class="property">surfaceBlur</span>: <span class="number">14.0</span>,
+);</code></pre>
+          </div>
+        </section>
+
+        <!-- 4. Bottom & Top Sheets Section -->
+        <section class="doc-section" id="sheets">
+          <h2>📐 4. Bottom & Top Sheets (Alignment Control)</h2>
+          <p>
+            Modalora gives developers complete control over sheet alignment. Choose <code>Alignment.bottomCenter</code>,
+            <code>Alignment.topCenter</code>, or <code>Alignment.center</code> with edge-to-edge support and snap
+            points.
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">dart</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            </div>
+            <pre><code><span class="comment">// 1. Open a classic Bottom Sheet (context is completely optional!)</span>
+<span class="keyword">await</span> <span class="type">Modalora</span>.<span class="function">bottomSheet</span>(
+  <span class="property">alignment</span>: <span class="type">Alignment</span>.<span class="property">bottomCenter</span>, <span class="comment">// Default bottom placement</span>
+  <span class="property">title</span>: <span class="string">'Filter Results'</span>,
+  <span class="property">showDragHandle</span>: <span class="keyword">true</span>,
+  <span class="property">child</span>: <span class="keyword">const</span> <span class="type">MyFilterFormWidget</span>(),
+);
+
+<span class="comment">// 2. Open a Top Sheet entering from screen top</span>
+<span class="keyword">await</span> <span class="type">Modalora</span>.<span class="function">bottomSheet</span>(
+  <span class="property">alignment</span>: <span class="type">Alignment</span>.<span class="property">topCenter</span>, <span class="comment">// Custom top placement!</span>
+  <span class="property">title</span>: <span class="string">'Quick Search & Commands'</span>,
+  <span class="property">child</span>: <span class="keyword">const</span> <span class="type">MyCommandPaletteWidget</span>(),
+);</code></pre>
+          </div>
+        </section>
+
+        <!-- 5. Action Sheets Section -->
+        <section class="doc-section" id="actionsheets">
+          <h2>📋 5. Action Sheets</h2>
+          <p>
+            Displays sleek iOS-inspired action sheets with icon items, destructive flags, and cancel capsules.
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">dart</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            </div>
+            <pre><code><span class="keyword">await</span> <span class="type">Modalora</span>.<span class="function">actionSheet</span>(
+  <span class="property">title</span>: <span class="string">'Share Project'</span>,
+  <span class="property">message</span>: <span class="string">'Select your preferred export method.'</span>,
+  <span class="property">actions</span>: [
+    <span class="type">ModaloraActionSheetItem</span>(
+      <span class="property">label</span>: <span class="string">'Copy Public Link'</span>,
+      <span class="property">icon</span>: <span class="type">Icons</span>.<span class="property">link_rounded</span>,
+      <span class="property">onPressed</span>: () =&gt; <span class="function">copyLink</span>(),
+    ),
+    <span class="type">ModaloraActionSheetItem</span>(
+      <span class="property">label</span>: <span class="string">'Export as PDF'</span>,
+      <span class="property">icon</span>: <span class="type">Icons</span>.<span class="property">picture_as_pdf_rounded</span>,
+      <span class="property">onPressed</span>: () =&gt; <span class="function">exportPdf</span>(),
+    ),
+    <span class="type">ModaloraActionSheetItem</span>(
+      <span class="property">label</span>: <span class="string">'Delete Access'</span>,
+      <span class="property">icon</span>: <span class="type">Icons</span>.<span class="property">delete_outline_rounded</span>,
+      <span class="property">isDestructive</span>: <span class="keyword">true</span>,
+      <span class="property">onPressed</span>: () =&gt; <span class="function">deleteAccess</span>(),
+    ),
+  ],
+  <span class="property">cancelText</span>: <span class="string">'Dismiss'</span>,
+);</code></pre>
+          </div>
+        </section>
+
+        <!-- 6. Popups & Tooltips -->
+        <section class="doc-section" id="popups">
+          <h2>🎯 6. Anchor-Targeted Popups & Tooltips</h2>
+          <p>
+            Anchor popups to any <code>GlobalKey</code> or <code>Rect</code>. Modalora's custom layout delegate computes
+            viewport bounds and automatically flips the anchor (e.g. from top to bottom) if edge collisions occur!
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">dart</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            </div>
+            <pre><code><span class="keyword">final</span> <span class="type">GlobalKey</span> <span class="property">buttonKey</span> = <span class="type">GlobalKey</span>();
+
+<span class="comment">// Button in widget tree</span>
+<span class="type">ElevatedButton</span>(
+  <span class="property">key</span>: <span class="property">buttonKey</span>,
+  <span class="property">onPressed</span>: () {
+    <span class="type">Modalora</span>.<span class="function">popup</span>(
+      <span class="property">anchorKey</span>: <span class="property">buttonKey</span>,
+      <span class="property">anchor</span>: <span class="type">ModaloraPopupAnchor</span>.<span class="property">bottom</span>,
+      <span class="property">title</span>: <span class="string">'Pro Feature'</span>,
+      <span class="property">message</span>: <span class="string">'Upgrade your subscription to unlock unlimited bandwidth.'</span>,
+    );
+  },
+  <span class="property">child</span>: <span class="keyword">const</span> <span class="type">Text</span>(<span class="string">'Inspect'</span>),
+);</code></pre>
+          </div>
+        </section>
+
+        <!-- 7. Context Menus -->
+        <section class="doc-section" id="menus">
+          <h2>⚡ 7. Context Menus & Submenus</h2>
+          <p>
+            Build rich right-click / long-press context menus complete with shortcut badges, icons, dividers, and nested
+            submenus.
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">dart</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            </div>
+            <pre><code><span class="type">ModaloraContextMenuRegion</span>(
+  <span class="property">items</span>: [
+    <span class="type">ModaloraMenuItem</span>(
+      <span class="property">title</span>: <span class="string">'Duplicate Layer'</span>,
+      <span class="property">icon</span>: <span class="type">Icons</span>.<span class="property">copy_rounded</span>,
+      <span class="property">shortcut</span>: <span class="string">'⌘D'</span>,
+      <span class="property">onSelected</span>: () =&gt; <span class="function">duplicate</span>(),
+    ),
+    <span class="keyword">const</span> <span class="type">ModaloraMenuDivider</span>(),
+    <span class="type">ModaloraMenuItem</span>(
+      <span class="property">title</span>: <span class="string">'Delete'</span>,
+      <span class="property">icon</span>: <span class="type">Icons</span>.<span class="property">delete_outline_rounded</span>,
+      <span class="property">isDestructive</span>: <span class="keyword">true</span>,
+      <span class="property">onSelected</span>: () =&gt; <span class="function">delete</span>(),
+    ),
+  ],
+  <span class="property">child</span>: <span class="keyword">const</span> <span class="type">Card</span>(<span class="property">child</span>: <span class="type">Text</span>(<span class="string">'Right-click or long-press me!'</span>)),
+);</code></pre>
+          </div>
+        </section>
+
+        <!-- 8. Snackbars & Toast Queues -->
+        <section class="doc-section" id="snackbars">
+          <h2>🍞 8. Snackbars & Multi-Position Toast Queues</h2>
+          <p>
+            Queue floating toast capsules anywhere across the viewport (<code>topCenter</code>,
+            <code>bottomCenter</code>,
+            <code>topRight</code>, etc.) with countdown progress bars and swipe-to-dismiss gestures.
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">dart</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            </div>
+            <pre><code><span class="type">Modalora</span>.<span class="function">snackbar</span>(
+  <span class="property">title</span>: <span class="string">'Upload Finished'</span>,
+  <span class="property">message</span>: <span class="string">'3 files successfully synchronized.'</span>,
+  <span class="property">position</span>: <span class="type">ModaloraPosition</span>.<span class="property">topCenter</span>,
+  <span class="property">duration</span>: <span class="keyword">const</span> <span class="type">Duration</span>(<span class="property">seconds</span>: <span class="number">4</span>),
+  <span class="property">showProgressBar</span>: <span class="keyword">true</span>,
+  <span class="property">actionLabel</span>: <span class="string">'VIEW'</span>,
+  <span class="property">onActionPressed</span>: () =&gt; <span class="function">openGallery</span>(),
+);</code></pre>
+          </div>
+        </section>
+
+        <!-- 9. Loading Overlays & Blockers -->
+        <section class="doc-section" id="overlays">
+          <h2>🌀 9. Orbital Loading Overlays & Handles</h2>
+          <p>
+            Block user interactions during asynchronous actions with high-precision orbital gradient spinners.
+            Returns a <code>ModaloraOverlayHandle</code> for clean programmatic dismissal.
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">dart</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            </div>
+            <pre><code><span class="comment">// 1. Show loading spinner and capture handle</span>
+<span class="keyword">final</span> <span class="property">handle</span> = <span class="type">Modalora</span>.<span class="function">loading</span>(
+  <span class="property">title</span>: <span class="string">'Processing AI Generation...'</span>,
+  <span class="property">message</span>: <span class="string">'Synthesizing neural model outputs.'</span>,
+);
+
+<span class="comment">// 2. Perform async work</span>
+<span class="keyword">await</span> <span class="function">generateContent</span>();
+
+<span class="comment">// 3. Programmatically dismiss</span>
+<span class="keyword">await</span> <span class="property">handle</span>.<span class="method">dismiss</span>();</code></pre>
+          </div>
+        </section>
+
+        <!-- 10. Adaptive Responsive Mode -->
+        <section class="doc-section" id="adaptive">
+          <h2>📱 10. Adaptive Mobile / Tablet / Desktop Presentation</h2>
+          <p>
+            Present as a bottom sheet on mobile devices (width &le; 600dp) and automatically convert to a centered
+            dialog
+            on tablets, laptops, and web browsers!
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">dart</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            </div>
+            <pre><code><span class="keyword">await</span> <span class="type">Modalora</span>.<span class="function">adaptive</span>(
+  <span class="property">title</span>: <span class="string">'Account Settings'</span>,
+  <span class="property">message</span>: <span class="string">'Manage your profile credentials and security.'</span>,
+  <span class="property">child</span>: <span class="keyword">const</span> <span class="type">SettingsFormWidget</span>(),
+);</code></pre>
+          </div>
+        </section>
+
+        <!-- 11. Theming -->
+        <section class="doc-section" id="theming">
+          <h2>🎨 11. Ambient Theming & Design System</h2>
+          <p>
+            Customize your application's modal design tokens globally or locally using <code>ModaloraThemeData</code>:
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">dart</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy</button>
+            </div>
+            <pre><code><span class="keyword">final</span> <span class="property">customTheme</span> = <span class="type">ModaloraThemeData</span>.<span class="method">dark</span>().<span class="method">copyWith</span>(
+  <span class="property">primaryColor</span>: <span class="keyword">const</span> <span class="type">Color</span>(<span class="number">0xFF8B5CF6</span>),
+  <span class="property">surfaceColor</span>: <span class="keyword">const</span> <span class="type">Color</span>(<span class="number">0xFF1E293B</span>).<span class="method">withOpacity</span>(<span class="number">0.8</span>),
+  <span class="property">borderRadius</span>: <span class="type">BorderRadius</span>.<span class="method">circular</span>(<span class="number">24.0</span>),
+  <span class="property">dialogTheme</span>: <span class="keyword">const</span> <span class="type">ModaloraDialogTheme</span>(
+    <span class="property">barrierBlur</span>: <span class="number">12.0</span>,
+    <span class="property">surfaceBlur</span>: <span class="number">16.0</span>,
+  ),
+  <span class="property">bottomSheetTheme</span>: <span class="keyword">const</span> <span class="type">ModaloraBottomSheetTheme</span>(
+    <span class="property">alignment</span>: <span class="type">Alignment</span>.<span class="property">bottomCenter</span>,
+    <span class="property">showDragHandle</span>: <span class="keyword">true</span>,
+  ),
+);</code></pre>
+          </div>
+        </section>
+
+        <!-- 3D Hologram & Tilt Engine Section -->
+        <section class="doc-section" id="3d-hologram">
+          <h2>🌌 11. 3D Perspective Hologram & Tilt Engine</h2>
+          <p>
+            Experience next-generation spatial UI in Flutter! Modalora provides a built-in <strong>Matrix4 3D perspective distortion engine</strong> with real-time pointer/gyro tracking, radial specular light glare reflections, pulsing orbital glow rings, and responsive glass chip wrapping.
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">modalora_3d_demo.dart</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy Code</button>
+            </div>
+            <pre><code><span class="comment">// 1. Direct One-Line 3D Hologram Modal Launch</span>
+<span class="keyword">await</span> <span class="type">Modalora</span>.<span class="function">hologram</span>(
+  <span class="property">title</span>: <span class="string">'3D Hologram Engine'</span>,
+  <span class="property">message</span>: <span class="string">'Drag or move cursor across the card to experience real-time 3D perspective gyro tilting and specular light reflections.'</span>,
+  <span class="property">icon</span>: <span class="type">Icons</span>.<span class="property">view_in_ar_rounded</span>,
+  <span class="property">accentColor</span>: <span class="keyword">const</span> <span class="type">Color</span>(<span class="number">0xFF06B6D4</span>),       <span class="comment">// Glowing cyan ring</span>
+  <span class="property">secondaryAccentColor</span>: <span class="keyword">const</span> <span class="type">Color</span>(<span class="number">0xFF8B5CF6</span>),<span class="comment">// Ambient purple glow</span>
+  <span class="property">primaryActionText</span>: <span class="string">'Explore 3D'</span>,
+  <span class="property">secondaryActionText</span>: <span class="string">'Dismiss'</span>,
+  <span class="property">features</span>: <span class="keyword">const</span> [
+    <span class="type">Modalora3DFeature</span>(<span class="property">icon</span>: <span class="type">Icons</span>.<span class="property">threed_rotation_rounded</span>, <span class="property">label</span>: <span class="string">'3D Tilt'</span>),
+    <span class="type">Modalora3DFeature</span>(<span class="property">icon</span>: <span class="type">Icons</span>.<span class="property">flare_rounded</span>, <span class="property">label</span>: <span class="string">'Specular Glare'</span>),
+    <span class="type">Modalora3DFeature</span>(<span class="property">icon</span>: <span class="type">Icons</span>.<span class="property">blur_on_rounded</span>, <span class="property">label</span>: <span class="string">'Frosted Glass'</span>),
+  ],
+  <span class="property">onPrimaryAction</span>: () {
+    <span class="function">print</span>(<span class="string">'3D Action Pressed!'</span>);
+  },
+);
+
+<span class="comment">// 2. Transform ANY Custom Widget into a 3D Perspective Modal</span>
+<span class="keyword">await</span> <span class="type">Modalora</span>.<span class="function">dialog3D</span>(
+  <span class="property">maxTilt</span>: <span class="number">0.3</span>,
+  <span class="property">perspective</span>: <span class="number">0.002</span>,
+  <span class="property">child</span>: <span class="type">MyCustomGlassCardWidget</span>(),
+);
+
+<span class="comment">// 3. Reusable 3D Tilt Container for Any Screen or Grid</span>
+<span class="type">Modalora3DTiltCard</span>(
+  <span class="property">maxTilt</span>: <span class="number">0.25</span>,
+  <span class="property">perspective</span>: <span class="number">0.0018</span>,
+  <span class="property">glareIntensity</span>: <span class="number">0.4</span>,
+  <span class="property">glareColor</span>: <span class="type">Colors</span>.<span class="property">white</span>,
+  <span class="property">child</span>: <span class="type">ProductCard</span>(),
+);</code></pre>
+          </div>
+        </section>
+
+        <!-- 12. API Reference -->
+        <section class="doc-section" id="api">
+          <h2>📚 12. Complete API Reference</h2>
+          <p>
+            Comprehensive list of all parameters, types, defaults, and descriptions across Common hooks and specific
+            components.
+            Use the live search box to instantly filter any parameter!
+          </p>
+
+          <div class="table-container">
+            <input type="text" class="search-filter" id="tableFilter"
+              placeholder="🔍 Type to filter parameters (e.g. alignment, context, blur, autoClose, snap)..."
+              onkeyup="filterTable()">
+            <table id="apiDataTable">
+              <thead>
+                <tr>
+                  <th style="width: 140px;">Category</th>
+                  <th style="width: 170px;">Parameter</th>
+                  <th style="width: 180px;">Type</th>
+                  <th style="width: 160px;">Default</th>
+                  <th>Description & Usage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 1. Common Shared Parameters -->
+                <tr>
+                  <td><span class="badge-tag tag-common">Common (All)</span></td>
+                  <td><code>context</code></td>
+                  <td><code>BuildContext?</code></td>
+                  <td><code>null (navigatorKey)</code></td>
+                  <td>Optional context; automatically resolves global <code>ModaloraConfig.navigatorKey</code> if
+                    omitted.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-common">Common (All)</span></td>
+                  <td><code>title</code></td>
+                  <td><code>String?</code></td>
+                  <td><code>null</code></td>
+                  <td>Primary headline title text for the modal, sheet, or toast.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-common">Common (All)</span></td>
+                  <td><code>message</code></td>
+                  <td><code>String?</code></td>
+                  <td><code>null</code></td>
+                  <td>Secondary description body text.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-common">Common (All)</span></td>
+                  <td><code>child</code></td>
+                  <td><code>Widget?</code></td>
+                  <td><code>null</code></td>
+                  <td>Custom widget content embedded inside the modal or sheet.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-common">Common (All)</span></td>
+                  <td><code>surfaceBlur</code></td>
+                  <td><code>double?</code></td>
+                  <td><code>12.0</code></td>
+                  <td>Glassmorphic blur sigma intensity applied to the card surface.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-common">Common (All)</span></td>
+                  <td><code>barrierBlur</code></td>
+                  <td><code>double?</code></td>
+                  <td><code>8.0</code></td>
+                  <td>Frosted backdrop blur sigma applied behind the modal.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-common">Common (All)</span></td>
+                  <td><code>barrierColor</code></td>
+                  <td><code>Color?</code></td>
+                  <td><code>Colors.black54</code></td>
+                  <td>Dimming color tint for the background barrier.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-common">Common (All)</span></td>
+                  <td><code>barrierDismissible</code></td>
+                  <td><code>bool?</code></td>
+                  <td><code>true</code></td>
+                  <td>Whether tapping outside the card dismisses the modal.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-common">Common (All)</span></td>
+                  <td><code>borderRadius</code></td>
+                  <td><code>BorderRadius?</code></td>
+                  <td><code>BorderRadius.circular(20)</code></td>
+                  <td>Corner radius curvature for the modal card or sheet.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-common">Common (All)</span></td>
+                  <td><code>border</code></td>
+                  <td><code>BoxBorder?</code></td>
+                  <td><code>Border.all(...)</code></td>
+                  <td>Custom outline stroke border decoration.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-common">Common (All)</span></td>
+                  <td><code>boxShadow</code></td>
+                  <td><code>List&lt;BoxShadow&gt;?</code></td>
+                  <td><code>theme.boxShadow</code></td>
+                  <td>Outer elevation shadows and glow effects.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-common">Common (All)</span></td>
+                  <td><code>animation</code></td>
+                  <td><code>ModaloraAnimation?</code></td>
+                  <td><code>fadeScale / spring</code></td>
+                  <td>Custom transition configuration (duration, curve, slide, spring).</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-common">Common (All)</span></td>
+                  <td><code>useRootNavigator</code></td>
+                  <td><code>bool</code></td>
+                  <td><code>true</code></td>
+                  <td>Whether to present over nested navigators or root screen.</td>
+                </tr>
+
+                <!-- 2. BottomSheet Specific -->
+                <tr>
+                  <td><span class="badge-tag tag-sheet">BottomSheet</span></td>
+                  <td><code>alignment</code></td>
+                  <td><code>AlignmentGeometry?</code></td>
+                  <td><code>Alignment.bottomCenter</code></td>
+                  <td>Screen alignment! Supports <code>bottomCenter</code>, <code>topCenter</code>, <code>center</code>.
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-sheet">BottomSheet</span></td>
+                  <td><code>showDragHandle</code></td>
+                  <td><code>bool?</code></td>
+                  <td><code>true</code></td>
+                  <td>Whether to display the rounded top drag pill handle.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-sheet">BottomSheet</span></td>
+                  <td><code>snapPoints</code></td>
+                  <td><code>List&lt;double&gt;?</code></td>
+                  <td><code>null</code></td>
+                  <td>Fractional heights (e.g. <code>[0.4, 0.85]</code>) for multi-stage expansion.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-sheet">BottomSheet</span></td>
+                  <td><code>isDraggable</code></td>
+                  <td><code>bool?</code></td>
+                  <td><code>true</code></td>
+                  <td>Whether user can drag up/down to expand or dismiss.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-sheet">BottomSheet</span></td>
+                  <td><code>header</code> / <code>footer</code></td>
+                  <td><code>Widget?</code></td>
+                  <td><code>null</code></td>
+                  <td>Fixed header and footer widgets pinned above/below scroll area.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-sheet">BottomSheet</span></td>
+                  <td><code>useSafeArea</code></td>
+                  <td><code>bool</code></td>
+                  <td><code>true</code></td>
+                  <td>Respects system notches and home navigation bars.</td>
+                </tr>
+
+                <!-- 3. Dialog Specific -->
+                <tr>
+                  <td><span class="badge-tag tag-dialog">Dialog</span></td>
+                  <td><code>primaryActionText</code></td>
+                  <td><code>String?</code></td>
+                  <td><code>null</code></td>
+                  <td>Label for the primary elevated action button.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-dialog">Dialog</span></td>
+                  <td><code>destructiveActionText</code></td>
+                  <td><code>String?</code></td>
+                  <td><code>null</code></td>
+                  <td>Label for the red destructive action button.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-dialog">Dialog</span></td>
+                  <td><code>secondaryActionText</code></td>
+                  <td><code>String?</code></td>
+                  <td><code>null</code></td>
+                  <td>Label for the secondary outlined/ghost button.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-dialog">Dialog</span></td>
+                  <td><code>buttonLayout</code></td>
+                  <td><code>ModaloraButtonLayout</code></td>
+                  <td><code>horizontal</code></td>
+                  <td>Layout orientation: <code>horizontal</code>, <code>vertical</code>, <code>stacked</code>.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-dialog">Dialog</span></td>
+                  <td><code>autoCloseDuration</code></td>
+                  <td><code>Duration?</code></td>
+                  <td><code>null</code></td>
+                  <td>Timer that automatically closes the dialog with circular countdown.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-dialog">Dialog</span></td>
+                  <td><code>icon</code></td>
+                  <td><code>Widget?</code></td>
+                  <td><code>null</code></td>
+                  <td>Custom header icon widget (e.g. warning, shield, success).</td>
+                </tr>
+
+                <!-- 4. ActionSheet Specific -->
+                <tr>
+                  <td><span class="badge-tag tag-action">ActionSheet</span></td>
+                  <td><code>actions</code></td>
+                  <td><code>List&lt;ModaloraActionSheetItem&gt;</code></td>
+                  <td><code>required</code></td>
+                  <td>List of action items with labels, icons, destructive flags, and callbacks.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-action">ActionSheet</span></td>
+                  <td><code>cancelText</code></td>
+                  <td><code>String?</code></td>
+                  <td><code>'Cancel'</code></td>
+                  <td>Label for the bottom-separated dismiss capsule.</td>
+                </tr>
+
+                <!-- 5. Popup Specific -->
+                <tr>
+                  <td><span class="badge-tag tag-popup">Popup</span></td>
+                  <td><code>anchorKey</code></td>
+                  <td><code>GlobalKey?</code></td>
+                  <td><code>null</code></td>
+                  <td>GlobalKey of the target widget to attach the popup to.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-popup">Popup</span></td>
+                  <td><code>anchor</code></td>
+                  <td><code>ModaloraPopupAnchor</code></td>
+                  <td><code>bottom</code></td>
+                  <td>Placement position (top, bottom, left, right, etc.) with auto-flip.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-popup">Popup</span></td>
+                  <td><code>offset</code></td>
+                  <td><code>Offset</code></td>
+                  <td><code>Offset(0, 8.0)</code></td>
+                  <td>Distance gap offset between popup and target element.</td>
+                </tr>
+
+                <!-- 6. Context Menu Specific -->
+                <tr>
+                  <td><span class="badge-tag tag-menu">Menu</span></td>
+                  <td><code>items</code></td>
+                  <td><code>List&lt;ModaloraMenuEntry&gt;</code></td>
+                  <td><code>required</code></td>
+                  <td>Items list (<code>ModaloraMenuItem</code>, <code>ModaloraMenuDivider</code>,
+                    <code>ModaloraSubmenu</code>).</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-menu">Menu</span></td>
+                  <td><code>shortcut</code></td>
+                  <td><code>String?</code></td>
+                  <td><code>null</code></td>
+                  <td>Keyboard shortcut badge string (e.g. '⌘C', 'Ctrl+S').</td>
+                </tr>
+
+                <!-- 7. Snackbar Specific -->
+                <tr>
+                  <td><span class="badge-tag tag-snack">Snackbar</span></td>
+                  <td><code>position</code></td>
+                  <td><code>ModaloraPosition</code></td>
+                  <td><code>bottomCenter</code></td>
+                  <td>Screen coordinate placement (<code>topCenter</code>, <code>bottomCenter</code>,
+                    <code>topRight</code>).</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-snack">Snackbar</span></td>
+                  <td><code>duration</code></td>
+                  <td><code>Duration</code></td>
+                  <td><code>Duration(seconds: 4)</code></td>
+                  <td>Toast visible display duration before automatic dismissal.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-snack">Snackbar</span></td>
+                  <td><code>showProgressBar</code></td>
+                  <td><code>bool?</code></td>
+                  <td><code>false</code></td>
+                  <td>Renders animated countdown line showing remaining time.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-snack">Snackbar</span></td>
+                  <td><code>dismissOnSwipe</code></td>
+                  <td><code>bool?</code></td>
+                  <td><code>true</code></td>
+                  <td>Allows user to flick or swipe the toast offscreen.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-snack">Snackbar</span></td>
+                  <td><code>actionLabel</code></td>
+                  <td><code>String?</code></td>
+                  <td><code>null</code></td>
+                  <td>Clickable action capsule button (e.g. 'UNDO', 'VIEW').</td>
+                </tr>
+
+                <!-- 8. Overlay Specific -->
+                <tr>
+                  <td><span class="badge-tag tag-overlay">Loading</span></td>
+                  <td><code>indicator</code></td>
+                  <td><code>Widget?</code></td>
+                  <td><code>ModaloraLoadingSpinner()</code></td>
+                  <td>Custom animated indicator or default orbital gradient spinner.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-overlay">Loading</span></td>
+                  <td><code>returns</code></td>
+                  <td><code>ModaloraOverlayHandle</code></td>
+                  <td><code>handle</code></td>
+                  <td>Handle instance with <code>await handle.dismiss()</code> method.</td>
+                </tr>
+
+                <!-- 9. 3D Hologram & Tilt Specific -->
+                <tr>
+                  <td><span class="badge-tag tag-dialog">3D Hologram</span></td>
+                  <td><code>accentColor</code></td>
+                  <td><code>Color</code></td>
+                  <td><code>Color(0xFF06B6D4)</code></td>
+                  <td>Primary glowing orbital ring & specular highlight color.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-dialog">3D Hologram</span></td>
+                  <td><code>secondaryAccentColor</code></td>
+                  <td><code>Color</code></td>
+                  <td><code>Color(0xFF8B5CF6)</code></td>
+                  <td>Secondary ambient glow & background gradient color.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-dialog">3D Hologram</span></td>
+                  <td><code>features</code></td>
+                  <td><code>List&lt;Modalora3DFeature&gt;</code></td>
+                  <td><code>[3D Tilt, Glare, Glass]</code></td>
+                  <td>List of feature chips rendered with responsive Wrap in glass container.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-dialog">3D Hologram</span></td>
+                  <td><code>maxTilt</code></td>
+                  <td><code>double</code></td>
+                  <td><code>0.25</code></td>
+                  <td>Maximum 3D angular tilt magnitude in radians on pointer/drag.</td>
+                </tr>
+                <tr>
+                  <td><span class="badge-tag tag-dialog">3D Hologram</span></td>
+                  <td><code>glareIntensity</code></td>
+                  <td><code>double</code></td>
+                  <td><code>0.35</code></td>
+                  <td>Specular radial light sheen opacity following cursor movement.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 13. Complete main.dart Starter Example -->
+        <section class="doc-section" id="sample-main">
+          <h2>🚀 13. Complete <code>main.dart</code> Full Example</h2>
+          <p>
+            Copy and paste this complete, production-ready <code>main.dart</code> file directly into your Flutter project to test every single
+            Modalora feature immediately:
+          </p>
+
+          <div class="code-wrapper">
+            <div class="code-top-bar">
+              <div class="code-dots">
+                <span class="code-dot dot-red"></span>
+                <span class="code-dot dot-yellow"></span>
+                <span class="code-dot dot-green"></span>
+                <span class="code-lang-tag">main.dart</span>
+              </div>
+              <button class="copy-btn" onclick="copySnippet(this)">Copy Code</button>
+            </div>
+            <pre><code><span class="keyword">import</span> <span class="string">'package:flutter/material.dart'</span>;
+<span class="keyword">import</span> <span class="string">'package:modalora/modalora.dart'</span>;
+
+<span class="comment">// 1. Define global navigatorKey for contextless modal dispatch</span>
+<span class="keyword">final</span> <span class="type">GlobalKey</span>&lt;<span class="type">NavigatorState</span>&gt; <span class="property">navigatorKey</span> = <span class="type">GlobalKey</span>&lt;<span class="type">NavigatorState</span>&gt;();
+
+<span class="keyword">void</span> <span class="function">main</span>() {
+  <span class="comment">// 2. Configure global default theme and navigatorKey</span>
+  <span class="type">Modalora</span>.<span class="function">configure</span>(
+    <span class="property">navigatorKey</span>: <span class="property">navigatorKey</span>,
+    <span class="property">theme</span>: <span class="type">ModaloraThemeData</span>.<span class="method">dark</span>(),
+  );
+
+  <span class="function">runApp</span>(<span class="keyword">const</span> <span class="type">ModaloraDemoApp</span>());
+}
+
+<span class="keyword">class</span> <span class="type">ModaloraDemoApp</span> <span class="keyword">extends</span> <span class="type">StatelessWidget</span> {
+  <span class="keyword">const</span> <span class="type">ModaloraDemoApp</span>({<span class="keyword">super</span>.<span class="property">key</span>});
+
+  <span class="annotation">@override</span>
+  <span class="type">Widget</span> <span class="function">build</span>(<span class="type">BuildContext</span> <span class="property">context</span>) {
+    <span class="keyword">return</span> <span class="type">MaterialApp</span>(
+      <span class="property">navigatorKey</span>: <span class="property">navigatorKey</span>, <span class="comment">// Attach navigator key</span>
+      <span class="property">title</span>: <span class="string">'Modalora Showcase'</span>,
+      <span class="property">debugShowCheckedModeBanner</span>: <span class="keyword">false</span>,
+      <span class="property">theme</span>: <span class="type">ThemeData</span>.<span class="method">dark</span>(<span class="property">useMaterial3</span>: <span class="keyword">true</span>),
+      <span class="property">home</span>: <span class="keyword">const</span> <span class="type">HomeScreen</span>(),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final GlobalKey popupKey = GlobalKey();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('✨ Modalora Example App'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // 1. Glass Dialog Demo
+              ElevatedButton.icon(
+                icon: const Icon(Icons.chat_bubble_outline_rounded),
+                label: const Text('1. Show Dialog'),
+                onPressed: () {
+                  Modalora.dialog(
+                    title: 'Delete Document?',
+                    message: 'Are you sure you want to permanently remove this file?',
+                    primaryActionText: 'Keep File',
+                    destructiveActionText: 'Delete',
+                    onDestructiveAction: () {
+                      Modalora.snackbar(
+                        title: 'Deleted',
+                        message: 'The document was removed.',
+                        position: ModaloraPosition.topCenter,
+                      );
+                    },
+                  );
+                },
+              ),
+              const SizedBox(height: 14),
+
+              // 2. Bottom Sheet Demo (Alignment.bottomCenter)
+              ElevatedButton.icon(
+                icon: const Icon(Icons.vertical_align_bottom_rounded),
+                label: const Text('2. Open Bottom Sheet'),
+                onPressed: () {
+                  Modalora.bottomSheet(
+                    alignment: Alignment.bottomCenter,
+                    title: 'Bottom Sheet Filter',
+                    showDragHandle: true,
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text('Smooth drag gesture with customizable alignment.'),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 14),
+
+              // 3. Top Sheet Demo (Alignment.topCenter)
+              ElevatedButton.icon(
+                icon: const Icon(Icons.vertical_align_top_rounded),
+                label: const Text('3. Open Top Sheet'),
+                onPressed: () {
+                  Modalora.bottomSheet(
+                    alignment: Alignment.topCenter,
+                    title: 'Top Sheet Command Bar',
+                    child: const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text('Enters seamlessly from the top edge!'),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 14),
+
+              // 4. Anchor-Targeted Popup
+              ElevatedButton.icon(
+                key: popupKey,
+                icon: const Icon(Icons.ads_click_rounded),
+                label: const Text('4. Anchor Popup'),
+                onPressed: () {
+                  Modalora.popup(
+                    anchorKey: popupKey,
+                    anchor: ModaloraPopupAnchor.bottom,
+                    title: 'Smart Tip',
+                    message: 'Automatically flips if colliding with screen bottom!',
+                  );
+                },
+              ),
+              const SizedBox(height: 14),
+
+              // 5. Toast Snackbar with Countdown
+              ElevatedButton.icon(
+                icon: const Icon(Icons.notifications_active_outlined),
+                label: const Text('5. Trigger Toast'),
+                onPressed: () {
+                  Modalora.snackbar(
+                    title: 'Project Saved',
+                    message: 'All changes synchronized to cloud.',
+                    showProgressBar: true,
+                    position: ModaloraPosition.bottomCenter,
+                  );
+                },
+              ),
+              const SizedBox(height: 14),
+
+              // 6. Orbital Loading Overlay with Handle Dismiss
+              ElevatedButton.icon(
+                icon: const Icon(Icons.hourglass_top_rounded),
+                label: const Text('6. Orbital Loader'),
+                onPressed: () async {
+                  final handle = Modalora.loading(
+                    title: 'Syncing Database...',
+                    message: 'Please wait a moment.',
+                  );
+
+                  // Simulate 2.5 seconds asynchronous task
+                  await Future.delayed(const Duration(milliseconds: 2500));
+                  await handle.dismiss();
+
+                  Modalora.snackbar(
+                    title: 'Completed!',
+                    message: 'Database synced successfully.',
+                  );
+                },
+              ),
+              const SizedBox(height: 14),
+
+              // 7. 3D Hologram Tilt Modal (Direct 1-line package call)
+              ElevatedButton.icon(
+                icon: const Icon(Icons.view_in_ar_rounded),
+                label: const Text('7. 3D Hologram Modal'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF06B6D4),
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () {
+                  Modalora.hologram(
+                    title: '3D Hologram Engine',
+                    message: 'Real-time 3D perspective gyro tilting and specular light reflections.',
+                    primaryActionText: 'Explore 3D',
+                    secondaryActionText: 'Dismiss',
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}</code></pre>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p style="font-weight: 700; margin-bottom: 8px;">Modalora — Released under MIT License</p>
+      <p>Crafted with ❤️ for Flutter developers building next-generation mobile, desktop, and web apps.</p>
+      <p style="margin-top: 10px;"><a href="https://github.com/imCoderAditya/Modalora" target="_blank" rel="noopener" style="color: var(--accent-cyan); text-decoration: none; font-weight: 600;">⭐ Star on GitHub (imCoderAditya/Modalora)</a></p>
+    </div>
+  </footer>
+
+  <!-- Interactive JavaScript Engine with ScrollSpy and Slider -->
+  <script>
+    // Theme Switcher
+    const themeBtn = document.getElementById('themeToggle');
+    let isDark = true;
+    themeBtn.addEventListener('click', () => {
+      isDark = !isDark;
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      themeBtn.textContent = isDark ? '🌙' : '☀️';
+    });
+
+    // Horizontal Slider Scroll Helper
+    function scrollSlider(offset) {
+      const track = document.getElementById('sliderTrack');
+      track.scrollBy({ left: offset, behavior: 'smooth' });
+    }
+
+    // ScrollSpy & Sidebar Link Activation
+    const sections = document.querySelectorAll('.doc-section');
+    const navLinks = document.querySelectorAll('.sidebar-item a');
+
+    function updateActiveSidebar() {
+      let currentSectionId = '';
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 120;
+        const sectionHeight = section.offsetHeight;
+        if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      if (currentSectionId) {
+        navLinks.forEach(link => {
+          const href = link.getAttribute('href').substring(1);
+          if (href === currentSectionId) {
+            link.classList.add('active');
+            // Auto scroll sidebar if needed
+            link.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    }
+
+    window.addEventListener('scroll', updateActiveSidebar, { passive: true });
+    window.addEventListener('load', updateActiveSidebar);
+
+    // Manual click selection on sidebar
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+
+    // Copy to clipboard helper
+    function copySnippet(btn) {
+      const code = btn.closest('.code-wrapper').querySelector('pre code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const orig = btn.innerText;
+        btn.innerText = 'Copied! ✓';
+        setTimeout(() => btn.innerText = orig, 2000);
+      });
+    }
+
+    // Simulator Engine
+    const simOverlay = document.getElementById('simOverlay');
+    const simIcon = document.getElementById('simIcon');
+    const simTitle = document.getElementById('simTitle');
+    const simMsg = document.getElementById('simMsg');
+    const simActions = document.getElementById('simActions');
+    const simToast = document.getElementById('simToast');
+
+    function closeSim() {
+      simOverlay.classList.remove('active');
+      setTimeout(() => {
+        simOverlay.classList.remove('sheet-bottom', 'sheet-top');
+      }, 250);
+    }
+
+    function closeToast() {
+      simToast.classList.remove('active');
+    }
+
+    function simTrigger(type) {
+      closeToast();
+      closeSim();
+
+      setTimeout(() => {
+        if (type === 'dialog') {
+          simOverlay.className = 'sim-overlay';
+          simIcon.textContent = '💎';
+          simTitle.textContent = 'Confirm Action';
+          simMsg.textContent = 'Frosted glassmorphism dialog with primary & cancel buttons.';
+          simActions.innerHTML = `
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-secondary" style="flex:1;padding:6px;font-size:0.75rem;" onclick="closeSim()">Cancel</button>
+              <button class="btn btn-primary" style="flex:1;padding:6px;font-size:0.75rem;" onclick="closeSim()">Confirm</button>
+            </div>
+          `;
+          simOverlay.classList.add('active');
+        } else if (type === 'sheet-bottom') {
+          simOverlay.className = 'sim-overlay sheet-bottom';
+          simIcon.textContent = '📐';
+          simTitle.textContent = 'Bottom Sheet';
+          simMsg.textContent = 'Aligned at Alignment.bottomCenter with drag gesture support.';
+          simActions.innerHTML = `<button class="btn btn-primary" style="width:100%;padding:8px;font-size:0.78rem;" onclick="closeSim()">Done</button>`;
+          setTimeout(() => simOverlay.classList.add('active'), 10);
+        } else if (type === 'sheet-top') {
+          simOverlay.className = 'sim-overlay sheet-top';
+          simIcon.textContent = '⚡';
+          simTitle.textContent = 'Top Sheet';
+          simMsg.textContent = 'Aligned at Alignment.topCenter entering smoothly from above.';
+          simActions.innerHTML = `<button class="btn btn-primary" style="width:100%;padding:8px;font-size:0.78rem;" onclick="closeSim()">Dismiss</button>`;
+          setTimeout(() => simOverlay.classList.add('active'), 10);
+        } else if (type === 'action-sheet') {
+          simOverlay.className = 'sim-overlay sheet-bottom';
+          simIcon.textContent = '📋';
+          simTitle.textContent = 'Share Project';
+          simMsg.textContent = 'Select an action item from the options below.';
+          simActions.innerHTML = `
+            <div style="display:flex;flex-direction:column;gap:6px;width:100%;">
+              <button class="btn btn-secondary" style="padding:6px;font-size:0.75rem;text-align:left;" onclick="closeSim()">🔗 Copy Link</button>
+              <button class="btn btn-secondary" style="padding:6px;font-size:0.75rem;text-align:left;" onclick="closeSim()">📤 AirDrop Share</button>
+              <button class="btn btn-secondary" style="padding:6px;font-size:0.75rem;text-align:left;color:var(--accent-rose);" onclick="closeSim()">🗑️ Revoke Access</button>
+            </div>
+          `;
+          setTimeout(() => simOverlay.classList.add('active'), 10);
+        } else if (type === 'loader') {
+          simOverlay.className = 'sim-overlay';
+          simIcon.innerHTML = `<div style="width:34px;height:34px;border:3px solid var(--accent-purple);border-top-color:transparent;border-radius:50%;margin:0 auto 10px;animation:spin 1s linear infinite;"></div><style>@keyframes spin{100%{transform:rotate(360deg)}}</style>`;
+          simTitle.textContent = 'Loading Assets...';
+          simMsg.textContent = 'Orbital gradient loader with pulsing core glow.';
+          simActions.innerHTML = `<button class="btn btn-secondary" style="padding:6px 14px;font-size:0.75rem;" onclick="closeSim()">Dismiss</button>`;
+          simOverlay.classList.add('active');
+        } else if (type === 'toast') {
+          simToast.classList.add('active');
+          setTimeout(() => closeToast(), 4000);
+        }
+      }, 50);
+    }
+
+    // Filter Table Search
+    function filterTable() {
+      const q = document.getElementById('tableFilter').value.toLowerCase();
+      const rows = document.querySelectorAll('#apiDataTable tbody tr');
+      rows.forEach(r => {
+        r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+
+</html>
